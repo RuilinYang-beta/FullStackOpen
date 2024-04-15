@@ -1,50 +1,24 @@
-const Header = (props) => {
-  return <h1>{props.course}</h1>;
-};
+import { useState } from "react";
 
-const Part = (props) => {
-  return (
-    <p>
-      {props.part} {props.exercises}
-    </p>
-  );
-};
-const Content = (props) => {
-  return props.content.map((part, idx) => {
-    return <Part key={idx} part={part.part} exercises={part.exercises} />;
-  });
-};
+const Display = ({ counter }) => <div>{counter}</div>;
 
-const Total = (props) => {
-  return (
-    <p>
-      Number of exercises{" "}
-      {props.content.reduce((acc, part) => acc + part.exercises, 0)}
-    </p>
-  );
-};
+const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>;
 
 const App = () => {
-  // const-definitions
-  const course = "Half Stack application development";
+  const [counter, setCounter] = useState(0);
 
-  const part1 = "Fundamentals of React";
-  const exercises1 = 10;
-  const part2 = "Using props to pass data";
-  const exercises2 = 7;
-  const part3 = "State of a component";
-  const exercises3 = 14;
-  const content = [
-    { part: part1, exercises: exercises1 },
-    { part: part2, exercises: exercises2 },
-    { part: part3, exercises: exercises3 },
-  ];
+  const increaseByOne = () => setCounter(counter + 1);
+
+  const decreaseByOne = () => setCounter(counter - 1);
+  const setToZero = () => setCounter(0);
 
   return (
     <div>
-      <Header course={course} />
-      <Content content={content} />
-      <Total content={content} />
+      <Display counter={counter} />
+
+      <Button onClick={increaseByOne} text="plus" />
+      <Button onClick={setToZero} text="zero" />
+      <Button onClick={decreaseByOne} text="minus" />
     </div>
   );
 };
