@@ -11,7 +11,7 @@ Create and run the demo app with Vite.
 npm create vite@latest part1 --template react
 
 # npm 7+, extra double-dash is needed:
-npm create vite@latest part1 -- --template react
+npm create vite@latest <app_name> -- --template react
 
 cd part1
 npm install
@@ -42,7 +42,7 @@ module.exports = {
        { allowConstantExport: true },
      ],
 
-     'react/prop-types': 0  # adding this line
+     'react/prop-types': 0  // adding this line
    },
 }
 ```
