@@ -4,6 +4,8 @@ This repo contains my solutions to the [Full Stack Open course](https://fullstac
 
 # Useful commands
 
+## Init
+
 Create and run the demo app with Vite.
 
 ```
@@ -18,7 +20,7 @@ npm install
 npm run dev
 ```
 
-# Silence ESLint warning (for now)
+## Silence ESLint warning (for now)
 
 You can silence the warning `react/prop-types` by adding to the file `.eslintrc .cjs` the next line
 
@@ -45,4 +47,20 @@ module.exports = {
      'react/prop-types': 0  // adding this line
    },
 }
+```
+
+## JSON-server
+
+To use without install:
+
+```
+npx json-server --port 3001 --watch db.json
+```
+
+Install and run:
+
+```
+npm install -g json-server  // global install, or
+npm install json-server --save-dev // only for this project as dev dependency
+json-server --port 3001 --watch db.json
 ```
