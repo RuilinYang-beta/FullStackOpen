@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 
-import { getAllPersons, createPerson, updatePerson } from "./services/persons";
+import {
+  getAllPersons,
+  createPerson,
+  updatePerson,
+  deletePerson,
+} from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -19,14 +24,40 @@ const App = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    // update an existing person
     if (persons.some((person) => person.name === newPerson.name)) {
-      alert(`${newPerson.name} is already added to phonebook`);
+      const existingPerson = persons.find(
+        (person) => person.name === newPerson.name
+      );
+
+      const replace = window.confirm(
+        `${existingPerson.name} is already added to phonebook, replace the old number with a new one?`
+      );
+      if (replace) {
+        updatePerson(existingPerson.id, newPerson).then((returnedPerson) => {
+          setPersons(
+            persons.map((person) =>
+              person.name !== returnedPerson.name ? person : returnedPerson
+            )
+          );
+        });
+      }
       return;
     }
 
+    // create a new person
     createPerson(newPerson).then((returnedPerson) => {
       setPersons([...persons, returnedPerson]);
     });
+  };
+
+  const handleDelete = (id) => {
+    const person = persons.find((person) => person.id === id);
+    if (window.confirm(`Delete ${person.name} ?`)) {
+      deletePerson(id).then(() => {
+        setPersons(persons.filter((person) => person.id !== id));
+      });
+    }
   };
 
   return (
@@ -44,7 +75,11 @@ const App = () => {
         setNewPerson={setNewPerson}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} filter={filter} />
+      <Persons
+        persons={persons}
+        filter={filter}
+        handleDelete={(id) => handleDelete(id)}
+      />
     </div>
   );
 };
@@ -89,23 +124,52 @@ const PersonForm = ({ handleSubmit, newPerson, setNewPerson }) => {
   );
 };
 
-const Persons = ({ persons, filter }) => {
+const Persons = ({ persons, filter, handleDelete }) => {
   if (filter === "") {
-    return persons.map((person) => (
-      <div key={person.name}>
-        {person.name} {person.number}
-      </div>
-    ));
+    return (
+      <table>
+        <tbody>
+          {persons.map((person) => (
+            <Person
+              key={person.name}
+              person={person}
+              handleDelete={handleDelete}
+            />
+          ))}
+        </tbody>
+      </table>
+    );
   }
-  return persons
-    .filter((person) =>
-      person.name.toLowerCase().includes(filter.toLowerCase())
-    )
-    .map((person) => (
-      <div key={person.name}>
-        {person.name} {person.number}
-      </div>
-    ));
+
+  return (
+    <table>
+      <tbody>
+        {persons
+          .filter((person) =>
+            person.name.toLowerCase().includes(filter.toLowerCase())
+          )
+          .map((person) => (
+            <Person
+              key={person.name}
+              person={person}
+              handleDelete={handleDelete}
+            />
+          ))}
+      </tbody>
+    </table>
+  );
+};
+
+const Person = ({ person, handleDelete }) => {
+  return (
+    <tr>
+      <td>{person.name}</td>
+      <td>{person.number}</td>
+      <td>
+        <button onClick={() => handleDelete(person.id)}>Delete</button>
+      </td>
+    </tr>
+  );
 };
 
 export default App;
