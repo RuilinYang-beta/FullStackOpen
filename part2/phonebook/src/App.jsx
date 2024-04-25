@@ -15,10 +15,16 @@ const App = () => {
   // { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
   const [newPerson, setNewPerson] = useState({ name: "", number: "" });
   const [filter, setFilter] = useState("");
+  const [message, setMessage] = useState({ success: "", failure: "" });
 
   useEffect(() => {
     getAllPersons().then((initialPersons) => {
-      setPersons(initialPersons);
+      const hardCodedPerson = {
+        name: "hardcoded",
+        number: "123",
+        id: 999,
+      };
+      setPersons([...initialPersons, hardCodedPerson]);
     });
   }, []);
 
@@ -34,13 +40,21 @@ const App = () => {
         `${existingPerson.name} is already added to phonebook, replace the old number with a new one?`
       );
       if (replace) {
-        updatePerson(existingPerson.id, newPerson).then((returnedPerson) => {
-          setPersons(
-            persons.map((person) =>
-              person.name !== returnedPerson.name ? person : returnedPerson
-            )
-          );
-        });
+        updatePerson(existingPerson.id, newPerson)
+          .then((returnedPerson) => {
+            setPersons(
+              persons.map((person) =>
+                person.name !== returnedPerson.name ? person : returnedPerson
+              )
+            );
+            setMessage({ ...message, success: `Updated ${newPerson.name}` });
+            setTimeout(() => {
+              setMessage({ success: "", failure: "" });
+            }, 3000);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
       return;
     }
@@ -48,15 +62,40 @@ const App = () => {
     // create a new person
     createPerson(newPerson).then((returnedPerson) => {
       setPersons([...persons, returnedPerson]);
+
+      setMessage({ ...message, success: `Added ${newPerson.name}` });
+      setTimeout(() => {
+        setMessage({ success: "", failure: "" });
+      }, 3000);
     });
   };
 
+  // delete a person
   const handleDelete = (id) => {
     const person = persons.find((person) => person.id === id);
     if (window.confirm(`Delete ${person.name} ?`)) {
-      deletePerson(id).then(() => {
-        setPersons(persons.filter((person) => person.id !== id));
-      });
+      deletePerson(id)
+        .then(() => {
+          setPersons(persons.filter((person) => person.id !== id));
+
+          setMessage({ ...message, success: `Deleted ${person.name}` });
+          setTimeout(() => {
+            setMessage({ success: "", failure: "" });
+          }, 3000);
+        })
+        .catch((error) => {
+          setMessage({
+            ...message,
+            failure: `${person.name} already deleted on server side.`,
+          });
+
+          setPersons(persons.filter((person) => person.id !== id));
+
+          setTimeout(() => {
+            setMessage({ success: "", failure: "" });
+          }, 3000);
+          console.log(error);
+        });
     }
   };
 
@@ -66,15 +105,17 @@ const App = () => {
       new person name: {newPerson.name}
       <br></br>
       new person number: {newPerson.number}
-      <h2>Phonebook</h2>
+      <Notification message={message} />
+      <br></br>
+      <h1>Phonebook</h1>
       <Filter filter={filter} setFilter={setFilter} />
-      <h2>Add new </h2>
+      <h1>Add new </h1>
       <PersonForm
         handleSubmit={handleSubmit}
         newPerson={newPerson}
         setNewPerson={setNewPerson}
       />
-      <h2>Numbers</h2>
+      <h1>Numbers</h1>
       <Persons
         persons={persons}
         filter={filter}
@@ -169,6 +210,16 @@ const Person = ({ person, handleDelete }) => {
         <button onClick={() => handleDelete(person.id)}>Delete</button>
       </td>
     </tr>
+  );
+};
+
+const Notification = ({ message }) => {
+  return (
+    (message.success || message.failure) && (
+      <div className={message.success ? "success" : "failure"}>
+        {message.success || message.failure}
+      </div>
+    )
   );
 };
 

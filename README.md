@@ -2,7 +2,7 @@
 
 This repo contains my solutions to the [Full Stack Open course](https://fullstackopen.com/en/) from University of Helsinki.
 
-# Useful commands
+# React Useful commands
 
 ## Init
 
@@ -63,4 +63,50 @@ Install and run:
 npm install -g json-server  // global install, or
 npm install json-server --save-dev // only for this project as dev dependency
 json-server --port 3001 --watch db.json
+```
+
+# NodeJS Useful Commands
+
+## Init
+
+```
+// cd into the desired project folder
+npm init
+```
+
+In the generated `package.json`:
+
+```
+  "scripts": {
+    "start": "node index.js",   // add this line
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+```
+
+In terminal, run the script like this:
+
+```
+npm start
+```
+
+## Update Dependencies
+
+```
+npm update
+```
+
+## `nodemon`
+
+```
+npm install --save-dev nodemon
+
+// in package.json
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",    // add this line
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+
+
+npm run dev
 ```
