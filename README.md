@@ -110,3 +110,16 @@ npm install --save-dev nodemon
 
 npm run dev
 ```
+
+## REST client documentation
+
+https://github.com/Huachao/vscode-restclient/blob/master/README.md#usage
+"One benefit that the REST client has over Postman is that the requests are handily available at the root of the project repository, and they can be distributed to everyone in the development team. "
+
+# Deployment with Fly.io
+
+```
+fly auth login
+fly launch
+fly deploy
+```

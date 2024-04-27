@@ -76,12 +76,7 @@ const App = () => {
     if (window.confirm(`Delete ${person.name} ?`)) {
       deletePerson(id)
         .then(() => {
-          setPersons(persons.filter((person) => person.id !== id));
-
           setMessage({ ...message, success: `Deleted ${person.name}` });
-          setTimeout(() => {
-            setMessage({ success: "", failure: "" });
-          }, 3000);
         })
         .catch((error) => {
           setMessage({
@@ -89,12 +84,14 @@ const App = () => {
             failure: `${person.name} already deleted on server side.`,
           });
 
+          console.log(error);
+        })
+        .finally(() => {
           setPersons(persons.filter((person) => person.id !== id));
 
           setTimeout(() => {
             setMessage({ success: "", failure: "" });
           }, 3000);
-          console.log(error);
         });
     }
   };
