@@ -118,8 +118,16 @@ https://github.com/Huachao/vscode-restclient/blob/master/README.md#usage
 
 # Deployment with Fly.io
 
+fly commands
+
 ```
 fly auth login
-fly launch
+fly launch              // init an app by running the command in the root directory of the app
 fly deploy
+fly apps open           // open the app in the browser
+fly scale show          // show the machine/CPU/memory the app is allocated
+fly ping -o personal    // pin the default organization
 ```
+
+streamline (building frontent) -> (add it to backend as static file):
+see the script at `part3/phonebook-backend/package.json`

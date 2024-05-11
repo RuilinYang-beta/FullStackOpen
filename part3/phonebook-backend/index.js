@@ -114,6 +114,9 @@ app.delete("/api/persons/:id", (request, response) => {
   response.status(204).end();
 });
 
+// middleware functions are called in the order that they're encountered by the JavaScript engine
+// Sometimes, we want to use middleware functions after routes.
+// This middleware will be used for catching requests made to non-existent routes.
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: "unknown endpoint" });
 };
