@@ -68,19 +68,21 @@ app.get("/api/persons/:id", (request, response, next) => {
 });
 
 // this is exclusively for adding new person, because for updating person FE will send PUT request
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
   const person = request.body;
 
-  if (!person.name || !person.number) {
-    return response.status(400).json({
-      error: "name or number is missing",
-    });
+  if (3 == 5) {
+    console.log("This is never executed");
   }
-
   const personToAdd = new Person(person);
-  personToAdd.save().then((savedPerson) => {
-    response.json(savedPerson);
-  });
+  personToAdd
+    .save()
+    .then((savedPerson) => {
+      response.json(savedPerson);
+    })
+    .catch((error) => {
+      next(error);
+    });
 });
 
 // this is for updating an existing person
@@ -88,7 +90,10 @@ app.put("/api/persons/:id", (request, response, next) => {
   const id = request.params.id;
   const personToUpdate = request.body;
 
-  Person.findByIdAndUpdate(id, personToUpdate, { new: true })
+  Person.findByIdAndUpdate(id, personToUpdate, {
+    new: true,
+    runValidators: true,
+  })
     .then((updatedPerson) => {
       response.json(updatedPerson);
     })
@@ -116,16 +121,21 @@ const unknownEndpoint = (request, response) => {
 
 app.use(unknownEndpoint);
 
+// If next was called without an argument, then the execution would simply move onto the next route or middleware.
+// If the next function is called with an argument, then the execution will continue to the error handler middleware.
 const errorHandler = (error, request, response, next) => {
   console.error(error.message);
 
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
+  } else if (error.name === "ValidationError") {
+    return response.status(400).json({ error: error.message });
   }
 
-  next(error);
+  next(error); // passes the error forward to the default Express error handler.
 };
 
+// this has to be the last loaded middleware, also all the routes should be registered before this!
 app.use(errorHandler);
 
 const PORT = process.env.PORT;
