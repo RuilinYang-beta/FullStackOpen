@@ -14,6 +14,7 @@ app.use(cors());
 morgan.token("body", function (request, response) {
   return request.body ? JSON.stringify(request.body) : "";
 });
+
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );

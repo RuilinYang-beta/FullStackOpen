@@ -44,26 +44,39 @@ const App = () => {
               )
             );
             setMessage({ ...message, success: `Updated ${newPerson.name}` });
+          })
+          .catch((error) => {
+            setMessage({
+              ...message,
+              failure: `Error updating ${newPerson.name}, ${error.response.data.error}}`,
+            });
+          })
+          .finally(() => {
             setTimeout(() => {
               setMessage({ success: "", failure: "" });
             }, 3000);
-          })
-          .catch((error) => {
-            console.log(error);
           });
       }
       return;
     }
 
     // create a new person
-    createPerson(newPerson).then((returnedPerson) => {
-      setPersons([...persons, returnedPerson]);
-
-      setMessage({ ...message, success: `Added ${newPerson.name}` });
-      setTimeout(() => {
-        setMessage({ success: "", failure: "" });
-      }, 3000);
-    });
+    createPerson(newPerson)
+      .then((returnedPerson) => {
+        setPersons([...persons, returnedPerson]);
+        setMessage({ ...message, success: `Added ${newPerson.name}` });
+      })
+      .catch((error) => {
+        setMessage({
+          ...message,
+          failure: `Error adding ${newPerson.name}, ${error.response.data.error}}`,
+        });
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setMessage({ success: "", failure: "" });
+        }, 3000);
+      });
   };
 
   // delete a person

@@ -124,6 +124,7 @@ fly commands
 fly auth login
 fly launch              // init an app by running the command in the root directory of the app
 fly deploy
+fly logs
 fly apps open           // open the app in the browser
 fly scale show          // show the machine/CPU/memory the app is allocated
 fly ping -o personal    // pin the default organization
