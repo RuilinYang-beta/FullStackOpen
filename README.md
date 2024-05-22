@@ -140,5 +140,7 @@ When writing the test, you may want to only execute only specific tests
 
 ```
 npm run test -- tests/note_api.test.js    // run tests in this file
-npm test -- --test-name-pattern="(PART_OF)_NAME_OF_THE_TEST"    // run tests with this name pattern
+npm run test -- --test-name-pattern="(PART_OF)_NAME_OF_THE_TEST"    // run tests with this name pattern
+npm run test -- --test-concurrency=1    // run tests in diff files sequentially
+
 ```
