@@ -128,7 +128,17 @@ fly logs
 fly apps open           // open the app in the browser
 fly scale show          // show the machine/CPU/memory the app is allocated
 fly ping -o personal    // pin the default organization
+fly secrets set MONGODB_URI="..."     // set env variables in production mode
 ```
 
 streamline (building frontent) -> (add it to backend as static file):
 see the script at `part3/phonebook-backend/package.json`
+
+# Testing
+
+When writing the test, you may want to only execute only specific tests
+
+```
+npm run test -- tests/note_api.test.js    // run tests in this file
+npm test -- --test-name-pattern="(PART_OF)_NAME_OF_THE_TEST"    // run tests with this name pattern
+```
