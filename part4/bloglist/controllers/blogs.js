@@ -4,38 +4,27 @@ const jwt = require("jsonwebtoken");
 
 const Blog = require("../models/blog");
 const User = require("../models/user");
+const middleware = require("../utils/middleware");
 const logger = require("../utils/logger");
 const helper = require("../tests/test_helper"); // temp
-
-const getTokenFrom = (request) => {
-  const authorization = request.get("authorization");
-
-  if (authorization && authorization.startsWith("Bearer ")) {
-    return authorization.replace("Bearer ", "");
-  }
-  return null;
-};
 
 blogsRouter.get("/", async (request, response) => {
   const blogs = await Blog.find({}).populate("user", { username: 1, name: 1 });
   response.json(blogs);
 });
 
-blogsRouter.post("/", async (request, response) => {
-  // getting user info from jwt
-  let decodedToken;
+// can only post with jwt token
+blogsRouter.post("/", middleware.userExtractor, async (request, response) => {
+  let user;
   try {
-    decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
+    user = await User.findById(request.user.id);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
   } catch (error) {
-    console.log(error);
-
-    return response.status(401).json({ error: "token missing or invalid" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
-
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: "token invalid" });
-  }
-  const user = await User.findById(decodedToken.id);
 
   const rawBlog = request.body;
 
@@ -59,26 +48,49 @@ blogsRouter.post("/", async (request, response) => {
   response.status(201).json(result);
 });
 
-blogsRouter.delete("/:id", async (request, response) => {
-  const { id } = request.params;
+// can only delete with jwt token
+// can only delete if the blog is created by the user
+blogsRouter.delete(
+  "/:id",
+  middleware.userExtractor,
+  async (request, response) => {
+    try {
+      const user = await User.findById(request.user.id);
 
-  // Validate the ID format
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return response.status(404).json({ error: "Resource not found" });
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      // Validate the ID format
+      const { id } = request.params;
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({ error: "Invalid blog id" });
+      }
+
+      // validate user is the creator of the blog
+      const toDelete = await Blog.findById(id);
+      if (!toDelete) {
+        return response.status(404).json({ error: "Resource not found" });
+      }
+
+      if (toDelete.user.toString() !== user._id.toString()) {
+        return response.status(401).json({ error: "Unauthorized" });
+      }
+
+      if (process.env.NODE_ENV !== "test") {
+        logger.info("Deleted blog with id", request.params.id);
+        logger.info(toDelete);
+      }
+
+      await Blog.findByIdAndDelete(id);
+      response.status(204).end();
+    } catch (error) {
+      console.log(error);
+
+      response.status(500).json({ error: "Internal Server Error" });
+    }
   }
-
-  const result = await Blog.findByIdAndDelete(id);
-  if (process.env.NODE_ENV !== "test") {
-    logger.info("Deleted blog with id", request.params.id);
-    logger.info(result);
-  }
-
-  if (result === null) {
-    return response.status(404).json({ error: "Resource not found" });
-  }
-
-  response.status(204).end();
-});
+);
 
 blogsRouter.put("/:id", async (request, response) => {
   const blogRaw = request.body;

@@ -144,8 +144,24 @@ const populateDummyData = async () => {
   await populateInitBlogs();
 };
 
-const getJwtOfUser = async () => {
+const getJwtOfRandomUser = async () => {
   const user = await User.findOne({});
+
+  const userForToken = {
+    username: user.username,
+    id: user._id,
+  };
+
+  return jwt.sign(userForToken, process.env.SECRET);
+};
+
+const getJwtOfUser = async ({ username, userId }) => {
+  let user;
+  if (userId) {
+    user = await User.findById(userId);
+  } else {
+    user = await User.findOne({ username: username });
+  }
 
   const userForToken = {
     username: user.username,
@@ -163,4 +179,5 @@ module.exports = {
   initialUsers,
   populateDummyData,
   getJwtOfUser,
+  getJwtOfRandomUser,
 };
