@@ -1,25 +1,56 @@
-const mongoose = require("mongoose");
-
 const blogsRouter = require("express").Router();
+const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
+
 const Blog = require("../models/blog");
+const User = require("../models/user");
 const logger = require("../utils/logger");
+const helper = require("../tests/test_helper"); // temp
+
+const getTokenFrom = (request) => {
+  const authorization = request.get("authorization");
+
+  if (authorization && authorization.startsWith("Bearer ")) {
+    return authorization.replace("Bearer ", "");
+  }
+  return null;
+};
 
 blogsRouter.get("/", async (request, response) => {
-  const blogs = await Blog.find({});
+  const blogs = await Blog.find({}).populate("user", { username: 1, name: 1 });
   response.json(blogs);
 });
 
 blogsRouter.post("/", async (request, response) => {
-  const rawBlog = request.body;
-  if (!rawBlog.hasOwnProperty("likes")) {
-    rawBlog.likes = 0;
+  // getting user info from jwt
+  let decodedToken;
+  try {
+    decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
+  } catch (error) {
+    console.log(error);
+
+    return response.status(401).json({ error: "token missing or invalid" });
   }
 
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: "token invalid" });
+  }
+  const user = await User.findById(decodedToken.id);
+
+  const rawBlog = request.body;
+
+  // validation that it has title and url
   if (!rawBlog.hasOwnProperty("title") || !rawBlog.hasOwnProperty("url")) {
     return response.status(400).json({ error: "title or url missing" });
   }
 
-  const blog = new Blog(rawBlog);
+  const blog = new Blog({
+    title: rawBlog.title,
+    url: rawBlog.url,
+    author: rawBlog.author,
+    likes: rawBlog.likes || 0,
+    user: user._id,
+  });
   if (process.env.NODE_ENV !== "test") {
     logger.info(blog);
   }

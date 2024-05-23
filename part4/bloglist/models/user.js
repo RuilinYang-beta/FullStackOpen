@@ -12,12 +12,12 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   name: String,
-  // notes: [
-  //   {
-  //     type: mongoose.Schema.Types.ObjectId,
-  //     ref: "Note",
-  //   },
-  // ],
+  blogs: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Blog",
+    },
+  ],
 });
 
 userSchema.set("toJSON", {

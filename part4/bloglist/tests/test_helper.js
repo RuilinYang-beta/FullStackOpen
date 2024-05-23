@@ -1,19 +1,10 @@
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
 const Blog = require("../models/blog");
 const User = require("../models/user");
 
 const initialBlogs = [
-  {
-    author: "Alice",
-    title: "Understanding JavaScript Closures",
-    likes: 45,
-    url: "http://example1.com",
-  },
-  {
-    author: "Bob",
-    title: "A Guide to Responsive Web Design",
-    likes: 62,
-    url: "http://example2.com",
-  },
   {
     author: "Alice",
     title: "Deep Dive into React Hooks",
@@ -37,12 +28,6 @@ const initialBlogs = [
     title: "Building RESTful APIs with Express",
     likes: 39,
     url: "http://example6.com",
-  },
-  {
-    author: "Alice",
-    title: "Asynchronous Programming in JavaScript",
-    likes: 74,
-    url: "http://example7.com",
   },
   {
     author: "Eve",
@@ -76,6 +61,24 @@ const initialBlogs = [
   },
 ];
 
+const initialUsers = [
+  {
+    username: "user1234",
+    name: "Alice Johnson",
+    password: "pass5678",
+  },
+  {
+    username: "user5678",
+    name: "Bob Smith",
+    password: "secret9876",
+  },
+  {
+    username: "user91011",
+    name: "Charlie Brown",
+    password: "mypassword12",
+  },
+];
+
 // const nonExistingId = async () => {
 //   const note = new Note({ content: "willremovethissoon" });
 //   await note.save();
@@ -94,9 +97,70 @@ const usersInDb = async () => {
   return users.map((user) => user.toJSON());
 };
 
+const populateInitBlogs = async () => {
+  await Blog.deleteMany({});
+
+  const users = await usersInDb();
+
+  // each blog -> get random use -> save blog -> get blog id from returned blog -> update user with blog id
+  for (const blog of initialBlogs) {
+    try {
+      const randomIndex = Math.floor(Math.random() * users.length);
+      const userJSON = users[randomIndex];
+      blog.user = userJSON.id;
+      const returnedBlog = await new Blog(blog).save();
+
+      const userObj = await User.findById(userJSON.id);
+      userObj.blogs = userObj.blogs.concat(returnedBlog._id);
+
+      await userObj.save();
+    } catch (error) {
+      console.error("Error saving blog or updating user:", error);
+    }
+  }
+};
+
+const populateInitUsers = async () => {
+  await User.deleteMany({});
+
+  const userObjects = await Promise.all(
+    initialUsers.map(async (user) => {
+      const saltRounds = 10;
+      const passwordHash = await bcrypt.hash(user.password, saltRounds);
+
+      return new User({
+        username: user.username,
+        name: user.name,
+        passwordHash,
+      });
+    })
+  );
+  const promiseArray = userObjects.map((user) => user.save());
+  await Promise.all(promiseArray);
+};
+
+const populateDummyData = async () => {
+  await populateInitUsers();
+  await populateInitBlogs();
+};
+
+const getJwtOfUser = async () => {
+  const user = await User.findOne({});
+
+  const userForToken = {
+    username: user.username,
+    id: user._id,
+  };
+
+  return jwt.sign(userForToken, process.env.SECRET);
+};
+
 module.exports = {
   initialBlogs,
   blogsInDb,
   usersInDb,
   // nonExistingId,
+  initialUsers,
+  populateDummyData,
+  getJwtOfUser,
 };
