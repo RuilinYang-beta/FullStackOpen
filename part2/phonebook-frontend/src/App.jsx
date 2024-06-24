@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
 
+import Filter from "./components/Filter";
+import PersonForm from "./components/PersonForm";
+import Persons from "./components/Persons";
+import Notification from "./components/Notification";
+
 import {
   getAllPersons,
   createPerson,
@@ -128,104 +133,6 @@ const App = () => {
         handleDelete={(id) => handleDelete(id)}
       />
     </div>
-  );
-};
-
-const Filter = ({ filter, setFilter }) => {
-  return (
-    <>
-      filter by name{" "}
-      <input
-        value={filter}
-        onChange={(event) => setFilter(event.target.value)}
-      />
-    </>
-  );
-};
-
-const PersonForm = ({ handleSubmit, newPerson, setNewPerson }) => {
-  return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        {"name:   "}
-        <input
-          value={newPerson.name}
-          onChange={(event) =>
-            setNewPerson({ ...newPerson, name: event.target.value })
-          }
-        />
-      </div>
-      <div>
-        {"number: "}
-        <input
-          value={newPerson.number}
-          onChange={(event) =>
-            setNewPerson({ ...newPerson, number: event.target.value })
-          }
-        />
-      </div>
-      <div>
-        <button type="submit">add</button>
-      </div>
-    </form>
-  );
-};
-
-const Persons = ({ persons, filter, handleDelete }) => {
-  if (filter === "") {
-    return (
-      <table>
-        <tbody>
-          {persons.map((person) => (
-            <Person
-              key={person.name}
-              person={person}
-              handleDelete={handleDelete}
-            />
-          ))}
-        </tbody>
-      </table>
-    );
-  }
-
-  return (
-    <table>
-      <tbody>
-        {persons
-          .filter((person) =>
-            person.name.toLowerCase().includes(filter.toLowerCase())
-          )
-          .map((person) => (
-            <Person
-              key={person.name}
-              person={person}
-              handleDelete={handleDelete}
-            />
-          ))}
-      </tbody>
-    </table>
-  );
-};
-
-const Person = ({ person, handleDelete }) => {
-  return (
-    <tr>
-      <td>{person.name}</td>
-      <td>{person.number}</td>
-      <td>
-        <button onClick={() => handleDelete(person.id)}>Delete</button>
-      </td>
-    </tr>
-  );
-};
-
-const Notification = ({ message }) => {
-  return (
-    (message.success || message.failure) && (
-      <div className={message.success ? "success" : "failure"}>
-        {message.success || message.failure}
-      </div>
-    )
   );
 };
 
