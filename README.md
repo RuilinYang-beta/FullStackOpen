@@ -144,3 +144,20 @@ npm run test -- --test-name-pattern="(PART_OF)_NAME_OF_THE_TEST"    // run tests
 npm run test -- --test-concurrency=1    // run tests in diff files sequentially
 
 ```
+
+# Part 12 Container
+
+## 12a
+
+- Image VS Container
+
+## 12b run a web-server from a container
+
+- `.dockerignore`, anything you wouldn't upload to GitHub
+- Build an Image from a `Dockerfile`
+  - Install dependencies **within** container by `RUN` command, this way environment-dependent things are installed
+  - `npm ci` as a more dependable option of `npm install`
+  - change the owner of the file copied to build the Image; change the user running the image
+- Run the Image
+  - map a port in host computer to one in container
+- `docker-compose.yml` to instruct what image to run, if such image does not exist, use what `Dockerfile` to build, etc.
