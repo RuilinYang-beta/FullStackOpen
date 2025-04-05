@@ -2,9 +2,13 @@
 
 This repo contains my solutions to the [Full Stack Open course](https://fullstackopen.com/en/) from University of Helsinki.
 
-# React Useful commands
+Below are some practical notes; more wholistic notes (for myself) are here: https://docs.google.com/document/d/1-YyrtzAZ088cPPs2WPlskJYFIvtotKFatTGZ9JCLJHE/edit?usp=sharing
 
-## Init and run
+(sort the parts in descending order, part 1 bottom-most, the most recently learnt part top-most, etc)
+
+# Part 1
+
+## React App: Init and run
 
 Create and run the demo app with Vite.
 
@@ -48,6 +52,10 @@ module.exports = {
    },
 }
 ```
+
+More on ESLint in Part 3.
+
+# Old notes
 
 ## JSON-server
 
