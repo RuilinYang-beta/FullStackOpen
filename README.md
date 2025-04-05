@@ -4,7 +4,7 @@ This repo contains my solutions to the [Full Stack Open course](https://fullstac
 
 # React Useful commands
 
-## Init
+## Init and run
 
 Create and run the demo app with Vite.
 
@@ -22,7 +22,7 @@ npm run dev
 
 ## Silence ESLint warning (for now)
 
-You can silence the warning `react/prop-types` by adding to the file `.eslintrc .cjs` the next line
+You can silence the warning [`react/prop-types`](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/prop-types.md) by adding to the file `.eslintrc .cjs` the next line
 
 ```
 module.exports = {
