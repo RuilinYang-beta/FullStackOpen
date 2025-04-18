@@ -45,7 +45,7 @@ const App = () => {
           .then((returnedPerson) => {
             setPersons(
               persons.map((person) =>
-                person.name !== returnedPerson.name ? person : returnedPerson
+                person.id !== returnedPerson.id ? person : returnedPerson
               )
             );
             setMessage({ ...message, success: `Updated ${newPerson.name}` });
@@ -119,14 +119,17 @@ const App = () => {
       <Notification message={message} />
       <br></br>
       <h1>Phonebook</h1>
+      {/* setting filter to display only persons that fits the filter */}
       <Filter filter={filter} setFilter={setFilter} />
       <h1>Add new </h1>
+      {/* adding new person */}
       <PersonForm
         handleSubmit={handleSubmit}
         newPerson={newPerson}
         setNewPerson={setNewPerson}
       />
       <h1>Numbers</h1>
+      {/* display persons according to filter */}
       <Persons
         persons={persons}
         filter={filter}

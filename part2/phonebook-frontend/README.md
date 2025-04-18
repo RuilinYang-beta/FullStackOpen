@@ -1,3 +1,8 @@
+# Structure
+
+- Use one terminal window to start the server
+- In another terminal window, start the FE
+
 # sample DB starting value
 
 ```

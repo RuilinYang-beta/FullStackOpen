@@ -6,6 +6,48 @@ Below are some practical notes; more wholistic notes (for myself) are here: http
 
 (sort the parts in descending order, part 1 bottom-most, the most recently learnt part top-most, etc)
 
+# Part 3
+
+# Part 2
+
+## JSON-server
+
+### No installation
+
+Use JSON server as a mock backend during FE development.
+You can start the JSON server without a separate installation:
+
+```
+npx json-server --port 3001 --watch db.json
+```
+
+### With installation
+
+Alternatively, install and run:
+
+```
+// global install, or
+npm install -g json-server
+
+// only for this project as dev dependency
+npm install json-server --save-dev
+```
+
+To run JSON-server, either by `json-server --port 3001 --watch db.json`, or adding a line to `package.json` and run `npm run server`:
+
+```
+{
+  // ...
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "server": "json-server -p 3001 db.json"  // this line
+  },
+}
+```
+
 # Part 1
 
 ## React App: Init and run
@@ -56,22 +98,6 @@ module.exports = {
 More on ESLint in Part 3.
 
 # Old notes
-
-## JSON-server
-
-To use without install:
-
-```
-npx json-server --port 3001 --watch db.json
-```
-
-Install and run:
-
-```
-npm install -g json-server  // global install, or
-npm install json-server --save-dev // only for this project as dev dependency
-json-server --port 3001 --watch db.json
-```
 
 # NodeJS Useful Commands
 
