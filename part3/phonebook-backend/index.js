@@ -68,7 +68,17 @@ app.get("/api/persons/:id", (request, response, next) => {
     });
 });
 
-// this is exclusively for adding new person, because for updating person FE will send PUT request
+/*
+  One year ago I wrote: 
+  this is exclusively for adding new person, 
+  because for updating person FE will send PUT request. 
+
+  But now I know here we should also check if the person already exists in the database,
+  because this is the safeguard on backend, 
+  eg. user can add duplicate Person via REST client, thus escape FE validation
+
+  // TODO: check if the person already exists in the database, this is the safeguard on backend
+*/
 app.post("/api/persons", (request, response, next) => {
   const person = request.body;
 

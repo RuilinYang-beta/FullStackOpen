@@ -8,6 +8,47 @@ Below are some practical notes; more wholistic notes (for myself) are here: http
 
 # Part 3
 
+## Init a NodeJS project
+
+```
+// cd into the desired project folder
+npm init
+```
+
+In the generated `package.json`:
+
+```
+  "scripts": {
+    "start": "node index.js",   // add this line
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+```
+
+In terminal, run the script like this:
+
+```
+npm start
+```
+
+## Automatic restarts app on change
+
+When we change code, we need to ctrl+c and restart the application, to save the trouble, use `node --watch index.js`
+
+```
+// in package.json
+{
+  // ..
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",  // add this line
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  // ..
+}
+```
+
+and run the app with `npm run dev`
+
 # Part 2
 
 ## JSON-server
@@ -97,58 +138,7 @@ module.exports = {
 
 More on ESLint in Part 3.
 
-# Old notes
-
-# NodeJS Useful Commands
-
-## Init
-
-```
-// cd into the desired project folder
-npm init
-```
-
-In the generated `package.json`:
-
-```
-  "scripts": {
-    "start": "node index.js",   // add this line
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-```
-
-In terminal, run the script like this:
-
-```
-npm start
-```
-
-## Update Dependencies
-
-```
-npm update
-```
-
-## `nodemon`
-
-```
-npm install --save-dev nodemon
-
-// in package.json
-  "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",    // add this line
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-
-
-npm run dev
-```
-
-## REST client documentation
-
-https://github.com/Huachao/vscode-restclient/blob/master/README.md#usage
-"One benefit that the REST client has over Postman is that the requests are handily available at the root of the project repository, and they can be distributed to everyone in the development team. "
+# ------------- Old notes -------------
 
 # Deployment with Fly.io
 

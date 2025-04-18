@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js",
+    "dev": "node --watch index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
     "build:ui": "rm -rf dist && cd ../../part2/phonebook-frontend/ && rm -rf dist && npm run build && cp -r dist ../../part3/phonebook-backend/",
@@ -20,8 +20,7 @@
     "@flydotio/dockerfile": "^0.5.6",
     "@stylistic/eslint-plugin-js": "^2.1.0",
     "eslint": "^9.2.0",
-    "globals": "^15.2.0",
-    "nodemon": "^3.1.0"
+    "globals": "^15.2.0"
   },
   "dependencies": {
     "cors": "^2.8.5",
