@@ -1,4 +1,8 @@
-// drop existing database and add dummy data
+/*
+  This script connects to a MongoDB cluster at the URL, 
+  drops the database `phonebookApp`, 
+  and inserts dummy data documents into the `Person` collection.
+*/
 require("dotenv").config();
 const mongoose = require("mongoose");
 
@@ -9,7 +13,9 @@ const personSchema = new mongoose.Schema({
 
 const Person = mongoose.model("Person", personSchema);
 
-const url = process.env.MONGODB_URI;
+// const url = process.env.MONGODB_URI;
+const password = process.argv[2];
+const url = `mongodb+srv://admin:${password}@cluster0.roaqgtb.mongodb.net/phonebookApp?retryWrites=true&w=majority&appName=Cluster0`;
 
 // function to connect to the database
 const connectToDatabase = () => mongoose.connect(url);
@@ -48,6 +54,7 @@ connectToDatabase()
   })
   .then(() => {
     console.log("Database dropped. Reconnecting and inserting dummy data...");
+    mongoose.connection.close(); // Close the connection to drop the database
     return connectToDatabase(); // Reconnect to ensure a fresh connection
   })
   .then(() => {

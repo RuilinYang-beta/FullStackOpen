@@ -49,6 +49,51 @@ When we change code, we need to ctrl+c and restart the application, to save the 
 
 and run the app with `npm run dev`
 
+## Deployment with Fly.io
+
+Fly.io workflow and common commands
+
+```
+// login to Fly.io account
+fly auth login
+
+// init an app by running the command in the root directory of the app
+// this will generate config files including `fly.toml`
+fly launch --no-deploy
+
+// inside `fly.toml`, edit `internal_port` under [http_service]
+// and `PORT` under [env]
+
+// deploy the app to Fly.io servers
+// later whenever the source code is changed, need to deploy again
+fly deploy
+
+// view logs from terminal, can also view in Fly.io site
+fly logs
+
+// open the app in the browser
+fly apps open
+```
+
+Other Fly.io common command
+
+```
+// show the machine/CPU/memory the app is allocated
+// if it's 2 machines,
+// there might be inconsistencies between data on diff machines
+// scale it down to 1 by `fly scale count 1`
+fly scale show
+
+// pin the default organization to make sure I can connect to Fly.io machine
+fly ping -o personal
+
+// set env variables in production mode
+fly secrets set MONGODB_URI="..."
+```
+
+streamline (building frontent) -> (add it to backend as static file):
+see the script at `part3/phonebook-backend/package.json`
+
 # Part 2
 
 ## JSON-server
@@ -139,24 +184,6 @@ module.exports = {
 More on ESLint in Part 3.
 
 # ------------- Old notes -------------
-
-# Deployment with Fly.io
-
-fly commands
-
-```
-fly auth login
-fly launch              // init an app by running the command in the root directory of the app
-fly deploy
-fly logs
-fly apps open           // open the app in the browser
-fly scale show          // show the machine/CPU/memory the app is allocated
-fly ping -o personal    // pin the default organization
-fly secrets set MONGODB_URI="..."     // set env variables in production mode
-```
-
-streamline (building frontent) -> (add it to backend as static file):
-see the script at `part3/phonebook-backend/package.json`
 
 # Testing
 

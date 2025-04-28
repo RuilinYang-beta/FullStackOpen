@@ -1,14 +1,20 @@
 import axios from "axios";
 
-// diff modes to run the app
-// 1. run with dummy backend powered by json-server,
-//    baseURL = http://localhost:3001/persons
-// 2. [deprecated] ~~run as a frontend-only repo, test with node.js backend in part3/phonebook-backend,~~
-//    ~~baseURL = http://localhost:3001/api/persons~~
-// 3. run as part of backend, build -> copy build folder to part3/phonebook-backend -> run node.js backend,
-//    baseURL = /api/persons
+// ------ 1. (deprecated) run with dummy backend powered by json-server, ------
+// see `package.json` of this repo
+// const baseURL = "http://localhost:3001/persons";
 
-const baseURL = `/api/persons`; // works for both 1 and 3, see `part2/phonebook-frontend/vite.config.js`
+// ------ 2. run as a frontend-only repo, ------
+// need to start node.js backend separately
+// (part3/phonebook-backend or part3/phonebook-backend-dummy)
+// const baseURL = "http://localhost:3001/api/persons";
+
+// ------ 3. run as part of backend, ------
+// build -> copy build folder to part3/phonebook-backend
+// (deploy BE) -> run node.js backend
+// because it's not a part of BE, the request goes to the same origin
+// so we only need relative path
+const baseURL = `/api/persons`;
 
 const getAllPersons = () => {
   return axios.get(baseURL).then((response) => response.data);
