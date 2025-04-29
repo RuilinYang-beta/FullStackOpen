@@ -1,22 +1,14 @@
+import js from "@eslint/js";
 import globals from "globals";
-import pluginJs from "@eslint/js";
-import stylisticJs from "@stylistic/eslint-plugin-js"; //highlight-line
+import { defineConfig } from "eslint/config";
 
-export default [
-  { files: ["**/*.js"], languageOptions: { sourceType: "commonjs" } },
-  { languageOptions: { globals: globals.node } },
-  pluginJs.configs.recommended,
+export default defineConfig([
+  js.configs.recommended,
   {
-    plugins: {
-      "@stylistic/js": stylisticJs,
-    },
-    rules: {
-      "@stylistic/js/indent": ["error", 2],
-      "@stylistic/js/linebreak-style": ["error", "unix"],
-      // "@stylistic/js/quotes": ["error", "single"],
-      // "@stylistic/js/semi": ["error", "never"],
-      eqeqeq: "error",
-    },
+    files: ["**/*.{js,mjs,cjs}"],
+    plugins: { js },
+    extends: ["js/recommended"],
   },
-  { ignores: ["dist", "node_modules"] },
-];
+  { files: ["**/*.js"], languageOptions: { sourceType: "commonjs" } },
+  { files: ["**/*.{js,mjs,cjs}"], languageOptions: { globals: globals.node } },
+]);
