@@ -1,0 +1,33 @@
+{
+  "name": "phonebook",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "build:ui": "rm -rf dist && cd ../../part2/phonebook-frontend/ && rm -rf dist && npm run build && cp -r dist ../../part3/phonebook-backend/",
+    "deploy": "fly deploy",
+    "deploy:full": "npm run build:ui && npm run deploy",
+    "logs:prod": "fly logs"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^9.25.1",
+    "@flydotio/dockerfile": "^0.5.6",
+    "@stylistic/eslint-plugin-js": "^2.13.0",
+    "eslint": "^9.25.1",
+    "globals": "^15.15.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.3.4",
+    "morgan": "^1.10.0",
+    "npm-run-all": "^4.1.5"
+  }
+}
