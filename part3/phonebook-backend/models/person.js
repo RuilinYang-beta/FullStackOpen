@@ -2,8 +2,7 @@ const mongoose = require("mongoose");
 
 mongoose.set("strictQuery", false);
 
-const database = "phonebookApp";
-const url = `${process.env.MONGODB_URI_PREFIX}${database}${process.env.MONGODB_URI_SUFFIX}`;
+const url = process.env.MONGODB_URI;
 
 console.log("connecting to", url);
 

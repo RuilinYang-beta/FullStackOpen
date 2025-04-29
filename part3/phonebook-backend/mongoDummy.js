@@ -6,16 +6,20 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 
+if (process.argv.length !== 3) {
+  console.log("Usage: node mongoDummy.js <password>");
+  process.exit(1);
+}
+
+const password = process.argv[2];
+const url = `mongodb+srv://admin:${password}@cluster0.roaqgtb.mongodb.net/phonebookApp?retryWrites=true&w=majority&appName=Cluster0`;
+
 const personSchema = new mongoose.Schema({
   name: String,
   number: String,
 });
 
 const Person = mongoose.model("Person", personSchema);
-
-// const url = process.env.MONGODB_URI;
-const password = process.argv[2];
-const url = `mongodb+srv://admin:${password}@cluster0.roaqgtb.mongodb.net/phonebookApp?retryWrites=true&w=majority&appName=Cluster0`;
 
 // function to connect to the database
 const connectToDatabase = () => mongoose.connect(url);

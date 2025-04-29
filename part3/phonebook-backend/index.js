@@ -24,26 +24,19 @@ app.get("/info", (request, response) => {
   response.type("html");
 
   const now = new Date();
-  const date = now.toLocaleString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-  const time = now.toLocaleTimeString("en-US", { hour12: false });
-  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   Person.countDocuments({})
     .then((count) => {
       response.send(
         `<p>Phonebook has info for ${count} people.</p>
-      <p>${date}, ${time}, ${timezone}</p>`
+      <p>${now.toString()}</p>`
       );
     })
     .catch((error) => {
       console.error("Error counting documents:", error);
       response.send(
         `<p>Phonebook has info for 0 people.</p>
-      <p>${date}, ${time}, ${timezone}</p>`
+      <p>${now.toString()}</p>`
       );
     });
 });
@@ -69,16 +62,29 @@ app.get("/api/persons/:id", (request, response, next) => {
 });
 
 /*
-  // TODO: check if the person already exists in the database, this is the safeguard on backend
+  // Check if the person already exists in the database, this is the safeguard on backend
 */
 app.post("/api/persons", (request, response, next) => {
-  const person = request.body;
+  const { name, number } = request.body;
 
-  const personToAdd = new Person(person);
-  personToAdd
-    .save()
-    .then((savedPerson) => {
-      response.json(savedPerson);
+  Person.findOne({ name: name })
+    .then((existingPerson) => {
+      if (existingPerson) {
+        existingPerson.number = number;
+
+        return existingPerson.save().then((updatedPerson) => {
+          response.json(updatedPerson);
+        });
+      } else {
+        const person = new Person({
+          name,
+          number,
+        });
+
+        return person.save().then((savedPerson) => {
+          response.json(savedPerson);
+        });
+      }
     })
     .catch((error) => {
       next(error);
