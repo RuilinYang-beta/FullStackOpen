@@ -4,14 +4,13 @@
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=production node index.js",
-    "dev": "NODE_ENV=test nodemon index.js",
+    "dev": "NODE_ENV=test node --watch index.js",
     "test": "NODE_ENV=test node --test"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "nodemon": "^3.1.0",
     "supertest": "^7.0.0"
   },
   "dependencies": {

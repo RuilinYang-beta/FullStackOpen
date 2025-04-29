@@ -10,7 +10,9 @@ const config = require("./utils/config");
 const logger = require("./utils/logger");
 
 const mongoUrl = config.MONGODB_URI;
+
 mongoose.set("strictQuery", false);
+
 mongoose
   .connect(mongoUrl)
   .then(() => {
@@ -21,6 +23,7 @@ mongoose
   });
 
 const app = express();
+
 app.use(express.static("dist"));
 app.use(cors());
 app.use(express.json());
